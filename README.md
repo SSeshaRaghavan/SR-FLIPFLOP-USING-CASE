@@ -40,9 +40,76 @@ The maximum possible groupings of adjacent ones are already shown in the figure.
 
 /* Program for flipflops and verify its truth table in quartus using Verilog programming. Developed by: RegisterNumber:
 */
+module SR_FlipFlop(
+    input S,
+    input R,
+    input clk,
+    output reg Q,
+    output reg Qn
+);
+
+    always @(posedge clk) begin
+        case ({S, R})
+            2'b00: begin
+                Q <= Q;
+                Qn <= Qn;
+            end
+            2'b01: begin
+                Q <= 0;
+                Qn <= 1;
+            end
+            2'b10: begin
+                Q <= 1;
+                Qn <= 0;
+            end
+            2'b11: begin
+                Q <= 1'bx;
+                Qn <= 1'bx;
+            end
+        endcase
+    end
+
+endmodule
+
+module SR_FlipFlop_tb;
+    reg S;
+    reg R;
+    reg clk;
+    wire Q;
+    wire Qn;
+
+    SR_FlipFlop uut (
+        .S(S),
+        .R(R),
+        .clk(clk),
+        .Q(Q),
+        .Qn(Qn)
+    );
+
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk;
+    end
+
+    initial begin
+        $monitor("Time=%0t | S=%b, R=%b, Q=%b, Qn=%b", $time, S, R, Q, Qn);
+
+        S = 0; R = 0; #10;
+        S = 0; R = 1; #10;
+        S = 1; R = 0; #10;
+        S = 1; R = 1; #10;
+
+        $finish;
+    end
+
+endmodule
 
 **RTL LOGIC FOR FLIPFLOPS**
+![image](https://github.com/user-attachments/assets/e62172c7-714b-462d-9224-8f4ff7e8728b)
 
 **TIMING DIGRAMS FOR FLIP FLOPS**
+![image](https://github.com/user-attachments/assets/ae8f6059-0a80-4af6-b515-b73bb251c3b7)
 
 **RESULTS**
+
+Implement SR Flip Flop using verilog and validating their functionality using their functional tables is verified successfully
